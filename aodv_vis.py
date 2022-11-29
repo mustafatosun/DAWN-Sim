@@ -1,14 +1,14 @@
 import random
 import sys
 sys.path.insert(1, '.')
-from source import DawnSim
+from source import DawnSimVis
 
 SOURCE = 0
 DEST = 99
 
 
 ###########################################################
-class Node(DawnSim.BaseNode):
+class Node(DawnSimVis.BaseNode):
 
     ###################
     def init(self):
@@ -17,10 +17,15 @@ class Node(DawnSim.BaseNode):
     ###################
     def run(self):
         if self.id == SOURCE:
+            self.change_color(1, 0, 0)
             self.seq_no = 0
             package = {'type': 'RREQ', 'source': self.id}
-            self.send(DawnSim.BROADCAST_ADDR, package)
+            self.send(DawnSimVis.BROADCAST_ADDR, package)
             self.log(f'Started to find path to {DEST}')
+        elif self.id == DEST:
+            self.change_color(1, 0, 0)
+        else:
+            self.change_color(.7, .7, .7)
 
     ###################
     def on_receive(self, pck):
@@ -28,7 +33,9 @@ class Node(DawnSim.BaseNode):
             if self.prev is not None: return
             self.log(f"RREQ received first time from {pck['source']}")
             self.prev = pck['source']
+            self.scene.addlink(self.prev, self.id, "prev")
             if self.id != DEST and self.id != SOURCE:
+                self.change_color(0, .7, 0)
                 self.set_timer(.5, self.timer_rreq_cb)
             elif self.id == DEST:
                 self.set_timer(.5, self.timer_rreply_cb)
@@ -47,7 +54,7 @@ class Node(DawnSim.BaseNode):
     ###################
     def timer_rreq_cb(self):
         package = {'type': 'RREQ', 'source': self.id}
-        self.send(DawnSim.BROADCAST_ADDR, package)
+        self.send(DawnSimVis.BROADCAST_ADDR, package)
         self.log('RREQ sent')
 
     ###################
@@ -82,9 +89,12 @@ def create_network():
 
 
 # setting the simulation
-sim = DawnSim.Simulator(
+sim = DawnSimVis.Simulator(
     duration=100,
-    timescale=1)
+    timescale=1,
+    visual=True,
+    terrain_size=(650, 650),
+    title='AODV')
 
 # creating network
 create_network()
