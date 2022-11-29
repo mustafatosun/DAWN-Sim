@@ -19,7 +19,7 @@ The aodv simulates the AODV routing algorithm in the visualized version. Execute
 
 <img src="img/flood_vis.PNG" width="300" alt="Flooding Demonstration">
 
-    python -m aodv.py
+    python -m aodv_vis.py
 
 <img src="img/aodv.PNG" width="300" alt="Flooding Demonstration">
 
@@ -59,3 +59,7 @@ The aodv simulates the AODV routing algorithm in the visualized version. Execute
 
 
     my_sim.run()
+
+## Citation
+
+    Tosun, M., Cabuk, U. C., Dagdeviren, O., & Ozturk, Y. (2023, February). DAWN-Sim: A Distributed Algorithm Simulator for Wireless Ad-hoc Networks in Python. In 2023 International Conference on Computing, Networking and Communications (ICNC). IEEE.
