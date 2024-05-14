@@ -3,6 +3,7 @@ A Simple Distributed Algorithm Simulator for Research and Teaching. The simulato
 
 ## Pre-requirements
 Python version is 3.8
+
 Install SimPy library
 
     pip install simpy
