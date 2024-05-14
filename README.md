@@ -2,9 +2,14 @@
 A Simple Distributed Algorithm Simulator for Research and Teaching. The simulator is based on WsnSimPy. It has also visualized version in it.
 
 ## Pre-requirements
+Python version is 3.8
 Install SimPy library
 
     pip install simpy
+
+For graphical interface
+
+    pip install tkinter
 
 ## Examples
 
