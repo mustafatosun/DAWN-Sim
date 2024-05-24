@@ -66,17 +66,16 @@ def informPlotters(_func_):
 
     # code snippet for preserving function's name, doc, and signature
     # (from http://numericalrecipes.wordpress.com/2009/05/25/signature-preserving-function-decorators/)
-    sig = list(inspect.getargspec(_func_))
-    wrap_sig = list(inspect.getargspec(_wrap_))
-    if not sig[2] :
-        sig[2] = wrap_sig[2]
-    src =  'def %s%s :\n' %(_func_.__name__, inspect.formatargspec(*sig))
-    sig[3] = None # if not, all vars with defaults are set to default value
-    src += '    return _wrap_%s\n' % (inspect.formatargspec(*sig))
-    evaldict = {'_wrap_' : _wrap_}
+    sig = inspect.signature(_func_)
+    params = list(sig.parameters.values())
+    new_params = [param.replace(annotation=param.empty) for param in params]
+    new_sig = sig.replace(parameters=new_params)
+    
+    src =  'def %s%s :\n' % (_func_.__name__, new_sig)
+    src += '    return _wrap_%s\n' % new_sig
+    evaldict = {'_wrap_': _wrap_}
     code = compile(src, '<string>', 'single')
-    #exec code in evaldict  # Python2
-    exec(code,evaldict)  # Python3
+    exec(code, evaldict)  # Python3
     ret = evaldict[_func_.__name__]
     ret.__doc__ = _func_.__doc__
     return ret
