@@ -32,11 +32,31 @@ class Plotter(GenericPlotter):
             tx,ty = terrain_size
         else:
             tx,ty = 700,700
+        
         self.tk = Tk()
         self.tk.title(self.windowTitle)
-        self.canvas = Canvas(self.tk, width=tx, height=ty)
-        self.canvas.pack(fill=BOTH, expand=YES)
-        self.timeText = self.canvas.create_text(0,0,text="time=0.0",anchor=NW)
+
+        frame = Frame(self.tk, width=tx, height=ty)
+        frame.pack(expand=True, fill=BOTH)
+
+        ver_scrollbar = Scrollbar(frame, orient=VERTICAL)
+        ver_scrollbar.pack(side=RIGHT, fill=Y)
+
+        hor_scrollbar = Scrollbar(frame, orient=HORIZONTAL)
+        hor_scrollbar.pack(side=BOTTOM, fill=X)
+        
+        scr_width = self.tk.winfo_screenwidth() * 2
+        scr_height = self.tk.winfo_screenheight() * 2
+
+        self.canvas = Canvas(frame, width=tx, height=ty, scrollregion=(0,0, scr_width, scr_height), yscrollincrement=10, xscrollincrement=10)  
+        self.canvas.pack(expand=True, fill=BOTH, side=LEFT)
+
+        ver_scrollbar.config(command=self.canvas.yview)
+        hor_scrollbar.config(command=self.canvas.xview)
+
+        self.canvas.config(yscrollcommand=ver_scrollbar.set, xscrollcommand=hor_scrollbar.set)
+
+        self.timeText = self.canvas.create_text(0,0,text="Time=0.0",anchor=NW)
 
     ###################
     def setTime(self, time):
